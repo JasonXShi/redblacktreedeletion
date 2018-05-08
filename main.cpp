@@ -1,5 +1,5 @@
 /*
- *	Red Black Tree Insertion
+ *	Red Black Tree Deletion
  *	Written by Jason Shi
  *	Allows the user to create a red black tree and delete, add, and print out the tree.
  *	
@@ -14,6 +14,7 @@
 #include <cmath>
 using namespace std;
 //declare methods
+bool search(Node* root, int num);
 void rotateLeft(Node *&root, Node *&pt);
 void rotateRight(Node *&root, Node *&pt);
 
@@ -94,6 +95,24 @@ void fixTree(Node* &root, Node* &pt){
     root->setColor(2);
 
 }
+bool search(Node* root, int num){
+    if(root!=NULL){
+        if(root->getContent() == num){
+            return true;
+        }else if(root->getContent() > num){
+            if(search(root->getLeft(),num)){
+                return true;
+            } 
+        }else{
+            if(search(root->getRight(), num)){
+                return true;
+            }
+        }
+    }
+        return false;
+
+
+}
 //recursive function that returns the head (usually same as input)
 Node* addNode(Node* head, Node* pt){
 	if(head==NULL){
@@ -165,9 +184,9 @@ void printTree(Node* head, int space){
         cout << " ";
 	
     if(head->getColor()==1){
-	    cout <<"red: " << head->getContent();
+	    cout <<"\033[1;31m" << head->getContent()<< "\033[0m";
     }else{
-    	cout << "black: " << head->getContent();
+    	cout << "\033[30;47m" << head->getContent() << "\33[0m";
     }
     printTree(head->getLeft(), space);
 }
@@ -258,8 +277,9 @@ int main(){
 		cout << "'ADD' to add a number." << endl;
 		cout << "'PRINT' to print the tree." << endl; 
 		cout << "'READ' to read in numbers from a file." << endl;
-		//cout << "'DELETE' to delete a number." << endl;
-		cout << "Or 'EXIT' to exit the program" << endl;
+		cout << "'DELETE' to delete a number." << endl;
+		cout << "'SEARCH' to search for a value." << endl;
+        cout << "Or 'EXIT' to exit the program" << endl;
 		char* command = new char[10];
 		cin.getline(command, 10);
 		int number = 0;
@@ -322,7 +342,21 @@ int main(){
 			fixTree(head, pt);
 		}
 	
-        }else if(strcmp(command, "EXIT") == 0){
+        }else if(strcmp(command, "SEARCH") == 0){
+            
+            cout << "Enter the value you want to search for: " << endl;
+            int searchNum = 0;
+            cin >> searchNum;
+            cin.get();
+            if(search(head, searchNum)){
+                cout << "The tree contains the number."<< endl;
+                
+            }else{
+                cout << "The tree does not contain the number."<< endl;
+            }
+
+        }
+        else if(strcmp(command, "EXIT") == 0){
 			exit(0);
 		}
 	
