@@ -200,25 +200,35 @@ Node* minValueNode(Node* node){
 }
 //this deletion works but doesnt adjust the tree (this was for bst)
 Node* deleteNode(Node* head, int number){
-  	
-    if(head->getContent()> number){
+  	if(head->getContent()> number){
     		head->setLeft(deleteNode(head->getLeft(), number));
  	 }else if(number > head->getContent()){
     		head->setRight(deleteNode(head->getRight(), number));
 	}else{
 		if(head->getLeft() == NULL){
 			Node* temp = head->getRight();
-			free(head);
+            if(temp->getColor()==1 || head->getColor()==1){
+                temp->setColor(2);
+            }
+            free(head);
 			return temp;
 		}else if(head->getRight() == NULL){
 			Node* temp = head->getLeft();
-			free(head);
+			if(temp->getColor()==1 || head->getColor()==1){
+                temp->setColor(2);
+            }
+            free(head);
 			return temp;
 		}
 		Node* temp = minValueNode(head->getRight());
-		head->setContent(temp->getContent());
+	    /*
+        if(temp->getColor()==1 || head->getColor()==1){
+            head->setColor(2);
+        }*/
+        head->setContent(temp->getContent());
 		head->setRight(deleteNode(head->getRight(), temp->getContent()));
 	}
+    return head;
 }
 
 
