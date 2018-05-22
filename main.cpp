@@ -17,7 +17,14 @@ using namespace std;
 bool search(Node* root, int num);
 void rotateLeft(Node *&root, Node *&pt);
 void rotateRight(Node *&root, Node *&pt);
-
+void case1(Node* n);
+void case2(Node* n);
+void case3(Node* n);
+void case4(Node* n);
+void case5(Node* n);
+void case6(Node* n);
+void replaceNode(Node * , Node *);
+void oneChildDelete(Node*);
 //call this function to fix the tree after every insertion
 void fixTree(Node* &root, Node* &pt){
 	//makes parent and grandparent of newly inserted node (helps with checking uncle and if parent is left or right)
@@ -221,15 +228,78 @@ Node* deleteNode(Node* head, int number){
 			return temp;
 		}
 		Node* temp = minValueNode(head->getRight());
-	    /*
+        
+        head->setContent(temp->getContent());
+		head->setRight(deleteNode(head->getRight(), temp->getContent())); 
         if(temp->getColor()==1 || head->getColor()==1){
             head->setColor(2);
-        }*/
-        head->setContent(temp->getContent());
-		head->setRight(deleteNode(head->getRight(), temp->getContent()));
+        }
+        
 	}
     return head;
 }
+Node* sibling(Node* n){
+    Node* p = n->getParent();
+    if(p==NULL){
+        return NULL;
+    }else if(n == p->getLeft()){
+        return p->getRight();
+    }else if(n == p->getRight()){
+        return p->getLeft();
+    }
+
+}
+
+void replaceNode(Node * n, Node * child){
+    child->setParent(n->getParent());
+    if( n == n->getParent()->getLeft()){
+        n->getParent()->setLeft(child);
+    }else{
+        n->getParent()->setRight(child);
+    }
+}
+void oneChildDelete(Node* n){
+    Node* child = NULL;
+    if(n->getLeft() == NULL){
+        child = n->getRight();
+    }else{
+        child = n->getLeft();
+    }
+    replaceNode(n, child);
+    if(n->getColor() == 2){
+        if(child->getColor() == 1){
+            child->setColor(2);
+        }else{
+            case1(child);
+        }
+    }
+    free(n);
+}
+void case1(Node* n){
+ if(n->getParent()!=NULL){
+    case2(n);
+ }
+}
+void case2(Node* n){
+    Node* s = sibling(n);
+    if(s->getColor() == 1){
+                
+
+
+    }    
+}
+void case3(Node* n){
+
+}
+void case4(Node* n){
+
+}
+void case5(Node* n){
+}
+
+void case6(Node* n){
+}
+
 
 
 int main(){
@@ -316,11 +386,12 @@ int main(){
 			cout << "Enter the number you want to delete: " << endl;
 			cin >> number;
 			cin.get();
-			if(head->getLeft() == NULL & head->getRight() == NULL){
+		/*	if(head->getLeft() == NULL & head->getRight() == NULL){
                 head->setContent(NULL);
             }else{
                  head = deleteNode(head, number);
-            }
+            }*/
+
 		}
 		else if(strcmp(command, "READ") == 0){
 		
