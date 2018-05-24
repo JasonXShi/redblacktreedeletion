@@ -180,6 +180,26 @@ void rotateRight(Node *&root, Node *&pt)
     pt_left->setRight(pt);
     pt->setParent( pt_left);
 }
+
+void rotate_left(Node* n){
+    Node* nnew = n->getRight();
+    n->setRight(nn->getLeft());
+    nnew->setLeft(n);
+    nnew->setParent(n->getParent());
+    n->setParent(nnew);
+    //other stuff later
+
+}
+
+void rotate_right(){
+    Node* nnew = n->getLeft();
+    n->setLeft(nnew->getRight());
+    nnew->setRight(n);
+    nnew->setParent(n->getParent());
+    n->setParent(nnew);
+    //other stuff later
+
+}
 //prints the tree spacing to make things look clear
 void printTree(Node* head, int space){
     if (head == NULL)
@@ -283,24 +303,76 @@ void case1(Node* n){
 void case2(Node* n){
     Node* s = sibling(n);
     if(s->getColor() == 1){
-                
-
-
-    }    
+        n->getParent()->setColor(1);
+        s->setColor(2);
+        if( n == n->getParent()->getLeft()){
+            //rotateLeft(n->getParent());
+        }else{
+            //rotateRight(n->getParent());
+        }         
+    }   
+   case3(n); 
 }
 void case3(Node* n){
+    Node* s = sibling(n);
 
+    if((n->getParent()->getColor()==2) && (s->getColor() == 2) && (s->getLeft()->getColor() == 2) && (s->getRight()->getColor() == 2)){
+        s->setColor(1);
+        case1(n->getParent());
+    }else{
+        case4(n);
+    
+    }
 }
 void case4(Node* n){
+    Node* s = sibling(n);
 
+    if((n->getParent()->getColor() == 1) && (s->getColor() == 2) && (s->getLeft()->getColor()==2) && (s->getRight()->getColor()==2)){
+        s->setColor(1);
+        n->getParent->setColor(2);
+    
+    }else{
+        case5(n);
+    
+    }
 }
 void case5(Node* n){
+    Node * s = sibling(n);
+    if(s->getColor() == 2){
+        if((n==n->getParent()->getLeft()) && (s->getRight()->getColor() ==2) && (s->getLeft()->getColor() == 1)){
+            s->setColor(1);
+            s->getLeft()->setColor(2);
+            //rotateright(s);
+        }else if((n == n->getParent()->getRight()) && (s->getLeft()->getColor() == 2) && (s->getRight()->getColor()==1)){
+            s->setColor(1);
+            s->getRight()->setColor(2);
+            //rotateleft(s);
+        
+        }
+        
+    }   
+    case6(n);
 }
 
 void case6(Node* n){
+    Node* s = sibling(n);
+    s->setColor(n->getParent()->getColor());
+    n->getParent()->setColor(2);
+    if(n==n->getParent()->getLeft()){
+        s->getRight()->setColor(2);
+        //rotateleft(n->getParent());
+        
+    
+    }else{
+        s->getLeft()->setColor(2);
+        //rotateRight(n->getParent());
+    }
 }
 
+void delete_node(){
 
+
+}
 
 int main(){
 	//some unused code for bst is commented out
