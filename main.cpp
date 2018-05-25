@@ -15,16 +15,16 @@
 using namespace std;
 //declare methods
 bool search(Node* root, int num);
-void rotateLeft(Node *&root, Node *&pt);
-void rotateRight(Node *&root, Node *&pt);
-void case1(Node* n);
-void case2(Node* n);
-void case3(Node* n);
-void case4(Node* n);
-void case5(Node* n);
-void case6(Node* n);
+void rotateLeft(Node *&root, Node  *pt);
+void rotateRight(Node *&root, Node *pt);
+void case1(Node *&root, Node *n);
+void case2(Node *&root, Node *n);
+void case3(Node *&root, Node *n);
+void case4(Node *&root, Node *n);
+void case5(Node *&root, Node *n);
+void case6(Node *&root, Node *n);
 void replaceNode(Node * , Node *);
-void oneChildDelete(Node*);
+void oneChildDelete(Node *&root, Node *n);
 //call this function to fix the tree after every insertion
 void fixTree(Node* &root, Node* &pt){
 	//makes parent and grandparent of newly inserted node (helps with checking uncle and if parent is left or right)
@@ -137,7 +137,7 @@ Node* addNode(Node* head, Node* pt){
 		return head;
 }
 
-void rotateLeft(Node *&root, Node *&pt)
+void rotateLeft(Node *&root, Node *pt)
 {
 	//makes a right node of the new node for easier rotation
     Node *pt_right = pt->getRight();
@@ -159,7 +159,7 @@ void rotateLeft(Node *&root, Node *&pt)
     pt->setParent(pt_right);
 }
 //same thing but just the other way
-void rotateRight(Node *&root, Node *&pt)
+void rotateRight(Node *&root, Node *pt)
 {
     Node *pt_left = pt->getLeft();
     pt->setLeft(pt_left->getRight());
@@ -180,8 +180,8 @@ void rotateRight(Node *&root, Node *&pt)
     pt_left->setRight(pt);
     pt->setParent( pt_left);
 }
-
-void rotate_left(Node* n){
+/*
+void rotate_left(Node *&root, Node* n){
     Node* nnew = n->getRight();
     n->setRight(nn->getLeft());
     nnew->setLeft(n);
@@ -199,7 +199,7 @@ void rotate_right(){
     n->setParent(nnew);
     //other stuff later
 
-}
+}*/
 //prints the tree spacing to make things look clear
 void printTree(Node* head, int space){
     if (head == NULL)
@@ -270,15 +270,18 @@ Node* sibling(Node* n){
 
 }
 
-void replaceNode(Node * n, Node * child){
-    child->setParent(n->getParent());
+void replaceNode(Node *n, Node *child){
+    
+	
+	child->setParent(n->getParent());
     if( n == n->getParent()->getLeft()){
         n->getParent()->setLeft(child);
     }else{
         n->getParent()->setRight(child);
     }
 }
-void oneChildDelete(Node* n){
+
+void oneChildDelete(Node *&root, Node *n){
     Node* child = NULL;
     if(n->getLeft() == NULL){
         child = n->getRight();
@@ -290,71 +293,72 @@ void oneChildDelete(Node* n){
         if(child->getColor() == 1){
             child->setColor(2);
         }else{
-            case1(child);
+            case1(root, child);
         }
     }
     free(n);
 }
-void case1(Node* n){
+void case1(Node *&root, Node *n){
  if(n->getParent()!=NULL){
-    case2(n);
+    case2(root,n);
+
  }
 }
-void case2(Node* n){
+void case2(Node *&root, Node *n){
     Node* s = sibling(n);
     if(s->getColor() == 1){
         n->getParent()->setColor(1);
         s->setColor(2);
         if( n == n->getParent()->getLeft()){
-            //rotateLeft(n->getParent());
+            rotateLeft(root, n->getParent());
         }else{
-            //rotateRight(n->getParent());
+            rotateRight(root, n->getParent());
         }         
     }   
-   case3(n); 
+   case3(root, n); 
 }
-void case3(Node* n){
+void case3(Node *&root, Node *n){
     Node* s = sibling(n);
 
     if((n->getParent()->getColor()==2) && (s->getColor() == 2) && (s->getLeft()->getColor() == 2) && (s->getRight()->getColor() == 2)){
         s->setColor(1);
-        case1(n->getParent());
+        case1(root, n->getParent());
     }else{
-        case4(n);
+        case4(root, n);
     
     }
 }
-void case4(Node* n){
+void case4(Node *&root, Node *n){
     Node* s = sibling(n);
 
     if((n->getParent()->getColor() == 1) && (s->getColor() == 2) && (s->getLeft()->getColor()==2) && (s->getRight()->getColor()==2)){
         s->setColor(1);
-        n->getParent->setColor(2);
+        n->getParent()->setColor(2);
     
     }else{
-        case5(n);
+        case5(root, n);
     
     }
 }
-void case5(Node* n){
+void case5(Node *&root, Node *n){
     Node * s = sibling(n);
     if(s->getColor() == 2){
         if((n==n->getParent()->getLeft()) && (s->getRight()->getColor() ==2) && (s->getLeft()->getColor() == 1)){
             s->setColor(1);
             s->getLeft()->setColor(2);
-            //rotateright(s);
+            rotateRight(root, s);
         }else if((n == n->getParent()->getRight()) && (s->getLeft()->getColor() == 2) && (s->getRight()->getColor()==1)){
             s->setColor(1);
             s->getRight()->setColor(2);
-            //rotateleft(s);
+            rotateLeft(root, s);
         
         }
         
     }   
-    case6(n);
+    case6(root, n);
 }
 
-void case6(Node* n){
+void case6(Node *&root, Node *n){
     Node* s = sibling(n);
     s->setColor(n->getParent()->getColor());
     n->getParent()->setColor(2);
@@ -368,10 +372,65 @@ void case6(Node* n){
         //rotateRight(n->getParent());
     }
 }
+Node* findNode(Node* root, int num){
+    
+        if(root->getContent() == num){
+            return root;
+        }else if(root->getContent() > num){
+            if(search(root->getLeft(),num)){
+                return root->getLeft();
+            } 
+        }else{
+            if(search(root->getRight(), num)){
+                return root->getRight();
+            }
+        }
+    
+        return NULL;
 
-void delete_node(){
-
-
+}
+// rotate, delete_node
+void delete_node(Node* root, int num){
+	cout << "in method";
+	Node* toDelete = findNode(root, num);
+	
+	if(toDelete==NULL){
+		return;	
+	}
+	if (toDelete->getLeft()!=NULL  && toDelete->getRight()!=NULL ) { // node to delete has two children
+        	cout << "2 children";
+		// use one or no child deletion on successor after value of successor copied into node to delete
+     	 	/*Node* successor = toDelete->getRight(); // find successor as leftmost node of right subtree
+   	   	while (successor->getLeft()!=NULL) successor = successor->getLeft();
+       		toDelete->setContent(successor->getContent()); // copy just the value of the successor
+       		toDelete = successor; // set successor to be deleted with one or no child methods that follow
+   	 */}
+	if (toDelete->getColor()==1) { // must have no children besides null leaves
+        //	delete toDelete->getRight(); // since moving left leaf node into position this is no longer used
+        	cout << "color is red";
+	//	replaceNode(toDelete, toDelete->getLeft());
+   	 } else if (toDelete->getLeft()!=NULL) { // black node with red left child
+        	cout << "left is not null";
+	//	 toDelete->getLeft()->setColor(2); // red child turns black and takes node to delete's position
+        //	replaceNode(toDelete, toDelete->getLeft());
+    	} else if (toDelete->getRight()!=NULL ) { // black node with red right child
+        	cout << "right is not null";
+		toDelete->getRight()->setColor(2);
+      		replaceNode(toDelete, toDelete->getRight());
+    	} else { // black node with no children
+        	cout << "black w no children";
+		Node* child = toDelete->getLeft();
+        	//delete toDelete->getRight(); // since moving left leaf node into position this is no longer used
+        	replaceNode(toDelete, child);
+        	/*oneChildDelete(root, child); // child has reduced black depth, call repair
+        
+		if (root== NULL) { // if deleted root remove leaf node in root
+          
+	      	//delete root;
+		  	root = NULL;
+	       	}*/
+	
+    }return;
 }
 
 int main(){
@@ -457,7 +516,11 @@ int main(){
 		}else if(strcmp(command, "DELETE") == 0){
 			cout << "Enter the number you want to delete: " << endl;
 			cin >> number;
+			
 			cin.get();
+			cout <<"after getting";
+			cout << "before calling";
+			delete_node(head, number);
 		/*	if(head->getLeft() == NULL & head->getRight() == NULL){
                 head->setContent(NULL);
             }else{

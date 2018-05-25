@@ -42,7 +42,7 @@ void Node::setColor(int newColor){
 	color = newColor;
 }
 void Node::setSibiling(Node* newSibiling){
-
+	newSibiling = sibiling;
 }
 Node* Node::getSibiling(){
 	return sibiling;
