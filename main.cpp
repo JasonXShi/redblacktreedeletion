@@ -422,26 +422,32 @@ Node* findNode(Node* root, int num){
 }
 
 void delete_node(Node *&root, int num){
-	
+	if(!search(root, num)){
+		cout << "number not found, not attempting to delete" << endl;
+		return;
+	}	
 	Node* toDelete = findNode(root, num);
 	cout << toDelete->getContent() << endl;
 	
 	if(toDelete==NULL){
 		return;	
 	}
-	if (toDelete->getLeft()!=NULL  && toDelete->getRight()!=NULL ) { // node to delete has two children
-        	cout << "2 children";
-		// use one or no child deletion on successor after value of successor copied into node to delete
-     	 	Node* successor = toDelete->getRight(); // find successor as leftmost node of right subtree
+	//left and right contain values
+	if (toDelete->getLeft()!=NULL  && toDelete->getRight()!=NULL ) { 
+        	cout << "2 children" << endl;
+     	 	Node* successor = toDelete->getRight(); 
+		// find successor 
    	   	while (successor->getLeft()!=NULL){ 
 			successor = successor->getLeft();
 		}
        		toDelete->setContent(successor->getContent()); // copy just the value of the successor
        		toDelete = successor; // set successor to be deleted with one or no child methods that follow
    	 }
-	if (toDelete->getColor()==1) { // must have no children 
+	//if the color is red
+	if (toDelete->getColor()==1) {  
         	//delete toDelete->getRight(); 
         	cout << "color is red";
+		//redundant if statement
 		if(toDelete->getParent()!=NULL){
 		if(toDelete->getParent()->getLeft() == toDelete){
 			toDelete->getParent()->setLeft(NULL);
@@ -451,17 +457,20 @@ void delete_node(Node *&root, int num){
 		}else{
 			//root = NULL;
 		}
-   	 } else if (toDelete->getLeft()!=NULL) { // black node with red left child
-        	cout << "left is not null";
+		//there is left child
+   	 } else if (toDelete->getLeft()!=NULL) { 
+        	//cout << "left is not null";
 		 toDelete->getLeft()->setColor(2); // red child turns black and takes node to delete's position
         	replaceNode(toDelete, toDelete->getLeft());
-    	} else if (toDelete->getRight()!=NULL ) { // black node with red right child
-        	cout << "right is not null";
+    		//there is right child
+	 } else if (toDelete->getRight()!=NULL ) { 
+        	/*cout << "right is not null";*/
 		
 		toDelete->getRight()->setColor(2);
       		replaceNode(toDelete, toDelete->getRight());
 
-    	} else { // black node with no children
+		//no children
+    	} else {
         	cout << "black w no children";
 		//Node* child = toDelete->getLeft();
         	//delete toDelete->getRight(); // since moving left leaf node into position this is no longer used
@@ -469,7 +478,8 @@ void delete_node(Node *&root, int num){
         	if(root==toDelete){
 			root = NULL;
 		}else{
-		case1(root, toDelete); // child has reduced black depth, call repair
+			//call all the deletion cases
+		case1(root, toDelete); 
         	if(toDelete->getParent()->getLeft() == toDelete){
 			toDelete->getParent()->setLeft(NULL);
 		}else{
