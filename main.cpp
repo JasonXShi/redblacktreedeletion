@@ -276,7 +276,7 @@ void replaceNode(Node *n, Node *child){
 	if(n->getParent()!=NULL){
 		cout << "to be replaced parent not NULL";
 		cout << n->getParent()->getContent();
-		/*{
+		
 		
 				  child->setParent(n->getParent());
 	
@@ -285,7 +285,8 @@ void replaceNode(Node *n, Node *child){
 	    		n->getParent()->setLeft(child);
     		}else{
 			n->getParent()->setRight(child);
-		}*/
+		}
+		
 	}else{
 		cout << "to be replaced parent is NULL" ;	
 	}
@@ -418,6 +419,7 @@ Node* findNode(Node* root, int num){
 void delete_node(Node *&root, int num){
 	
 	Node* toDelete = findNode(root, num);
+	
 	
 	if(toDelete==NULL){
 		return;	
