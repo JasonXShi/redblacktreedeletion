@@ -23,7 +23,7 @@ void case3(Node *&root, Node *n);
 void case4(Node *&root, Node *n);
 void case5(Node *&root, Node *n);
 void case6(Node *&root, Node *n);
-void replaceNode(Node * , Node *);
+void replaceNode(Node *& , Node *);
 void oneChildDelete(Node *&root, Node *n);
 //call this function to fix the tree after every insertion
 void fixTree(Node* &root, Node* &pt){
@@ -270,7 +270,7 @@ Node* sibling(Node* n){
 
 }
 
-void replaceNode(Node *n, Node *child){
+void replaceNode(Node *&n, Node *child){
     
 	
 	if(n->getParent()!=NULL){
@@ -288,7 +288,12 @@ void replaceNode(Node *n, Node *child){
 		}
 		
 	}else{
-		cout << "to be replaced parent is NULL" ;	
+		cout << child->getContent() << endl;
+		cout << "to be replaced parent is NULL" ;
+		n->setContent(child->getContent());
+		n->setLeft(child->getLeft());
+		n->setRight(child->getRight());
+			
 	}
 }
 
@@ -315,7 +320,7 @@ void case1(Node *&root, Node *n){
        	if(n->getParent()!=NULL){
     case2(root,n);
 
- }
+    }
 }
 void case2(Node *&root, Node *n){
     cout << "case 2";
@@ -419,7 +424,7 @@ Node* findNode(Node* root, int num){
 void delete_node(Node *&root, int num){
 	
 	Node* toDelete = findNode(root, num);
-	
+	cout << toDelete->getContent() << endl;
 	
 	if(toDelete==NULL){
 		return;	
@@ -461,11 +466,15 @@ void delete_node(Node *&root, int num){
 		//Node* child = toDelete->getLeft();
         	//delete toDelete->getRight(); // since moving left leaf node into position this is no longer used
         	//replaceNode(toDelete, child);
-        	case1(root, toDelete); // child has reduced black depth, call repair
+        	if(root==toDelete){
+			root = NULL;
+		}else{
+		case1(root, toDelete); // child has reduced black depth, call repair
         	if(toDelete->getParent()->getLeft() == toDelete){
 			toDelete->getParent()->setLeft(NULL);
 		}else{
 			toDelete->getParent()->setRight(NULL);
+		}
 		}
 			
 
